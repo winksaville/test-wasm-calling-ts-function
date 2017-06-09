@@ -1,14 +1,12 @@
 # test wasm calling ts functiion
 
 # Prerequistes
-- node
+- node version ^8.0.0 as wasm is needed
 - yarn
-- Internet connection to download node v8
 
 # Install
 ```
 $ yarn
-$ yarn add nodev8
 ```
 
 # Run

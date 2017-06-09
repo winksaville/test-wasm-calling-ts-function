@@ -6,18 +6,21 @@
     "repository": "",
     "author": "Wink Saville <wink@saville.com>",
     "license": "MIT",
+    "engines": {
+        "node": "^8.0.0"
+    },
     "scripts": {
-        "add:nodev8": "rm -rf nodev8 && mkdir nodev8 && curl https://nodejs.org/download/nightly/v8.0.0-nightly20170406a94a5da78c/node-v8.0.0-nightly20170406a94a5da78c-linux-x64.tar.xz -s -o node-v8.tar.xz && tar -xJf node-v8.tar.xz -C nodev8 --strip-components 1 && rm node-v8.tar.xz",
+        "cleanup": "rm -rf node_modules",
         "build:wasm": "wast2wasm src/call_print_i32.wast --output build/call_print_i32.wasm",
         "build:tsc": "tsc -p src/utils.tsconfig.json && tsc -p src/print_i32.tsconfig.json",
         "pretest": "yarn build:wasm && yarn build:tsc",
-        "test": "./nodev8/bin/node --expose_wasm build/print_i32.js"
+        "test": "node --expose_wasm build/print_i32.js"
     },
     "devDependencies": {
-        "typescript": "^2.2.2"
+        "typescript": "^2.3.4"
     },
     "dependencies": {
-        "@types/node": "^7.0.12",
+        "@types/node": "^7.0.29",
         "@types/webassembly-js-api.d.ts": "https://github.com/winksaville/webassembly-js-api.d.ts.git"
     }
 }
