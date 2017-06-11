@@ -1,36 +1,40 @@
-import {instantiateWasmFile} from "../build/utils"
+import {instantiateWasmFile} from "../build/utils";
 
 /**
- * An object
+ * The import object passed to instantiateWasmFile
  */
 let importsForInstance = {
-    // Unused
-    imports: {
-        xxx: (arg: any) => {
-            console.log(`xxx: arg=${arg}`);
-        },
-    },
-    // Matches 'module name', the first name following the 'import' keyword
-    // (func $prtI32 (import "importsForPrintI32" "print_i32") (param i32))
-    importsForPrintI32: {
-        // Unused, extra entries are ignored
-        wink: (arg: any) => {
-            console.log(`wink: arg=${arg}`);
-        },
-        // Matches 'export name' which follows the 'module name
+    env: {
         print_i32: (arg: number) => {
             console.log(`print_i32: arg=${arg}`);
-        }
+        },
+        memory: new WebAssembly.Memory({initial:1})
     }
 };
 
+let call_print_i32: () => void;
+
+async function load_wasm_imports(): Promise<Error | null> {
+    try {
+        let instance = await instantiateWasmFile("./out/src/call_print_i32.c.wasm",
+            importsForInstance);
+        call_print_i32 = instance.exports.call_print_i32;
+        return Promise.resolve(null);
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
+
 async function main() {
     try {
-        let instance = await instantiateWasmFile("./build/call_print_i32.wasm",
-            importsForInstance);
-        instance.exports.call_print_i32();
-    } catch (err) {
-        console.log(`instantiateWasmFile: err=${err}`);
+        let x = await load_wasm_imports();
+        console.log(`x=${x}`);
+
+        console.log("invoke call_print_i32");
+        call_print_i32();
+        console.log("invoked call_print_i32");
+    } catch(err) {
+        console.log(`err=${err}`);
     }
 }
 
