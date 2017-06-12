@@ -11,7 +11,7 @@ dstDir=$(outDir)/$(srcDir)
 
 $(dstDir)/%.c.bc: $(srcDir)/%.c
 	mkdir -p $(@D)
-	$(cc) -emit-llvm --target=wasm32 -Oz $< -c -o $@
+	$(cc) -emit-llvm --target=wasm32 -Weverything -Oz $< -c -o $@
 
 $(dstDir)/%.c.s: $(dstDir)/%.c.bc
 	$(llc) -asm-verbose=false $< -o $@
